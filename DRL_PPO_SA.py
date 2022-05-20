@@ -211,6 +211,7 @@ if __name__ == "__main__":
     REWARD_THRESHOLD = 93.0
     REWARD_THRESHOLD_EVAL = 80.0
     PRINT_EVERY = 10
+    TEST_EVERY = 5
     PPO_STEPS = 5
     PPO_CLIP = 0.2
     LEARNING_RATE = 0.01
@@ -255,7 +256,7 @@ if __name__ == "__main__":
             train_env.Plot_Var('info/policy_loss ',policy_loss)
             train_env.Plot_Var('info/value_loss ',value_loss)
 
-            if episode % 5:#perc_prod_train > REWARD_THRESHOLD_EVAL:
+            if episode % TEST_EVERY == 0:#perc_prod_train > REWARD_THRESHOLD_EVAL:
                 test_env =  Planta(cfg_file ='line_'+str(n_maq)+'M.cfg',log_dir=run_name+'_E_'+str(episode),mode = 0)
                 test_reward,perc_prod_test = evaluate(test_env, policy)
                 test_rewards.append(test_reward)

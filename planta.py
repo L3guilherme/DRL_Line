@@ -61,11 +61,11 @@ class Control_Maquina:
 
 class Planta:
 
-    def __init__(self,cfg_file = '',log_dir='plantaLog0',mode = 0):
+    def __init__(self,cfg_file = '',log_dir='plantaLog0',mode = 0,dbug=False):
 
         super(Planta, self).__init__()
 
-        print('INIT PLanta...')
+        #print('INIT PLanta...')
 
         self.delta_sim = 10.0
 
@@ -102,12 +102,14 @@ class Planta:
             except Exception as e:
                 #print(e.message)
                 pass
-        print('------------INIT-----------------')
-        print('Procução máxima: '+str(self.pacote_unidades*(1.0/self.maxProssTime))+' cpm')
-        print('#Recursos#')
-        for mq in self.objectList:
-            print('     '+mq.name)
-        print('---------------------------------')
+
+        if dbug:
+            print('------------INIT-----------------')
+            print('Procução máxima: '+str(self.pacote_unidades*(1.0/self.maxProssTime))+' cpm')
+            print('#Recursos#')
+            for mq in self.objectList:
+                print('     '+mq.name)
+            print('---------------------------------')
 
         self.th_prod = 0.7
 
@@ -191,7 +193,7 @@ class Planta:
 
         
         self.reset()
-        print('OK!')
+        #print('OK!')
 
     def Plot_Var(self,name,value):
         self.writer.add_scalar(f'vars/'+name,value,self.itc_total)

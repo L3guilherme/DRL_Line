@@ -95,16 +95,14 @@ class ActorCritic(nn.Module):
             
         policy_loss = - (advantages * log_prob_actions).sum()
 
-        if device == torch.device('cuda'):
-            returns.to(device)
-            values.to(device)
+        returns.to(device)
+        values.to(device)
         
         value_loss = F.smooth_l1_loss(returns, values).sum()
             
         self.optimizer.zero_grad()
-        if device == torch.device('cuda'):
-            policy_loss.to(device)
-            value_loss.to(device)
+        policy_loss.to(device)
+        value_loss.to(device)
 
         policy_loss.backward()
         value_loss.backward()
@@ -126,11 +124,7 @@ class ActorCritic(nn.Module):
         returns = self.calculate_returns(self.rewards, self.discount_factor).to(device)
 
         advantages = self.calculate_advantages(returns, values)
-        if device == torch.device('cuda'):
-            print('TRAIN GPU')
-            policy_loss, value_loss = self.update_policy(advantages.to(device), log_prob_actions.to(device), returns.to(device), values.to(device),device)
-        else:
-            policy_loss, value_loss = self.update_policy(advantages, log_prob_actions, returns, values)
+        policy_loss, value_loss = self.update_policy(advantages.to(device), log_prob_actions.to(device), returns.to(device), values.to(device),device)
 
         return policy_loss, value_loss
 
@@ -239,6 +233,7 @@ if __name__ == "__main__":
     MAX_EPISODES = 50
     N_TRIALS = 25
     PRINT_EVERY = 10
+    TEST_EVERY = 5
 
     REWARD_THRESHOLD = 93.0
     REWARD_THRESHOLD_EVAL = 80.0
@@ -271,22 +266,14 @@ if __name__ == "__main__":
         np.random.seed(SEED);
         torch.manual_seed(SEED);
 
-
         INPUT_DIM = train_env.observation_space.shape[0]
         OUTPUT_DIM = 3#test_env.action_space.n
         DISCOUNT_FACTOR = 0.99
         n_agentes = train_env.n_maquinas
 
-
         policy = []
-        print('Iniciando agentes....')
         for i_ag in range(n_agentes):
-            if device == torch.device('cuda'):
-                print('GPU')
                 policy.append(ActorCritic(INPUT_DIM, dim, OUTPUT_DIM,DISCOUNT_FACTOR).to(device))
-            else:
-                policy.append(ActorCritic(INPUT_DIM, dim, OUTPUT_DIM,DISCOUNT_FACTOR))
-
 
         train_rewards = []  
         test_rewards = []
@@ -311,7 +298,7 @@ if __name__ == "__main__":
             train_env.Plot_Var('info/Reward mean',mean_train_rewards)
             train_env.Plot_Var('info/EPs',episode)
 
-            if episode % 5:#perc_prod_train > REWARD_THRESHOLD_EVAL: # a cada mil testar, arquivos distintos, sem th rw min
+            if episode % TEST_EVERY == 0:#perc_prod_train > REWARD_THRESHOLD_EVAL: # a cada mil testar, arquivos distintos, sem th rw min
                     test_env =  Planta(cfg_file ='line_'+str(n_maq)+'M.cfg',log_dir=run_name+'_E_'+str(episode),mode = 1)
                     test_reward,perc_prod_test = evaluate(test_env,policy)
                     test_rewards.append(test_reward)
@@ -319,9 +306,8 @@ if __name__ == "__main__":
                     mean_test_rewards = np.mean(test_rewards[-N_TRIALS:])
                     mean_test_perc_prod = np.mean(test_perc_prod[-N_TRIALS:])
                     test_env.Plot_Var('info/Reward mean',mean_test_rewards)
-                    if device == torch.device('cuda'):
-                        for i_ag in range(n_agentes):
-                            policy[i_ag].to(device)
+                    for i_ag in range(n_agentes):
+                        policy[i_ag].to(device)
 
             
             if episode % PRINT_EVERY == 0:
@@ -330,10 +316,10 @@ if __name__ == "__main__":
             if mean_test_perc_prod >= REWARD_THRESHOLD:
                 print(f'| Episode FIM: {episode:3} | Mean Train Rewards: {mean_train_rewards:5.1f} | Mean Test Rewards: {mean_test_rewards:5.1f} | Prod: {mean_test_perc_prod:5.1f}')
                 print(f'Reached reward threshold in {episode} episodes')
-                for i_ag in range(n_agentes):
-                    torch.save(policy[i_ag].state_dict(), run_name+'_'+str(i_ag)+'.pt')
                 break
 
+        for i_ag in range(n_agentes):
+            torch.save(policy[i_ag].state_dict(), run_name+'_'+str(i_ag)+'.pt')
 
                   #ALG       TIP        maq   TAM MRW                INT                 EPS     PTR             TRW               PTE                 DTI          DTF
         resRun = [agent_type,agent_tech,n_maq,dim,mean_train_rewards,train_env.itc_total,episode,mean_train_prod,mean_test_rewards,mean_test_perc_prod,current_time,datetime.datetime.now(),MAX_EPISODES]

@@ -135,9 +135,6 @@ def evaluate(env, policy):
 
 if __name__ == "__main__":
 
-    USE_CUDA = torch.cuda.is_available()
-
-    print(USE_CUDA)
 
     HIDDEN_DIM = [32,64,128]
     agent_type = 'DDQN'
@@ -148,6 +145,7 @@ if __name__ == "__main__":
     REWARD_THRESHOLD = 93.0
     REWARD_THRESHOLD_EVAL = 80.0
     PRINT_EVERY = 10
+    TEST_EVERY = 5
 
     for dim in HIDDEN_DIM:
 
@@ -232,7 +230,7 @@ if __name__ == "__main__":
             if episode % PRINT_EVERY == 0:
                 print(f'| Episode: {episode:3} | Mean Train Rewards: {mean_train_rewards:5.1f} | Mean Test Rewards: {mean_test_rewards:5.1f} | Prod: {perc_prod_train:5.1f}')
 
-            if episode % 5:#perc_prod_train > REWARD_THRESHOLD_EVAL:
+            if episode % TEST_EVERY == 0:#perc_prod_train > REWARD_THRESHOLD_EVAL:
                 test_env = Planta(cfg_file ='line_'+str(n_maq)+'M.cfg',log_dir=run_name+'_E_'+str(episode),mode=0)
                 test_reward,perc_prod_test = evaluate(test_env, current_model)
                 test_rewards.append(test_reward)

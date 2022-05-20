@@ -218,6 +218,7 @@ def evaluate(env, policy):
 
     n_agentes = len(policy)
     for i_ag in range(n_agentes):
+        policy[i_ag].to(torch.device('cpu'))
         policy[i_ag].reset()
         policy[i_ag].eval()
 
@@ -258,6 +259,7 @@ if __name__ == "__main__":
     REWARD_THRESHOLD_EVAL = 80.0
     PRINT_EVERY = 10
     DISCOUNT_FACTOR = 0.99
+    TEST_EVERY = 5
 
     for dim in HIDDEN_DIM:
         current_time = datetime.datetime.now()
@@ -300,7 +302,7 @@ if __name__ == "__main__":
                 train_env.Plot_Var('info/policy_loss_'+str(i_ag),policy_loss[i_ag])
                 train_env.Plot_Var('info/value_loss_'+str(i_ag),value_loss[i_ag])
 
-            if episode % 5:#perc_prod_train > REWARD_THRESHOLD_EVAL: # a cada mil testar, arquivos distintos, sem th rw min
+            if episode % TEST_EVERY == 0:#perc_prod_train > REWARD_THRESHOLD_EVAL: # a cada mil testar, arquivos distintos, sem th rw min
                     test_env =  Planta(cfg_file ='line_'+str(n_maq)+'M.cfg',log_dir=run_name+'_E_'+str(episode),mode = 1)
                     test_reward,perc_prod_test = evaluate(test_env,policy)
                     test_rewards.append(test_reward)

@@ -67,10 +67,10 @@ class DuelingDQN(nn.Module):
         value     = self.value(x)
         return value + advantage  - advantage.mean()
     
-    def act(self, state, epsilon):
+    def act(self, state, epsilon,device):
         if random.random() > epsilon:
-            state   = torch.FloatTensor(state).unsqueeze(0)
-            q_value = self.forward(state)
+            state   = torch.FloatTensor(state).unsqueeze(0).to(device)
+            q_value = self.forward(state.to(device))
             action  = q_value.max(1)[1].data[0]
             action = action.item()
         else:
@@ -85,40 +85,42 @@ class DuelingDQN(nn.Module):
         return action
 
 class DDQN_Agent:
-    def __init__(self, num_inputs, num_outputs,NN_size = 32,batch_size =32):
+    def __init__(self, num_inputs, num_outputs,NN_size = 32,batch_size =32,device = torch.device('cpu')):
 
         self.buffer_replay = ReplayBuffer(5000)
-        self.current_model = DuelingDQN(num_inputs, 3,NN_size)
-        self.target_model  = DuelingDQN(num_inputs, 3,NN_size) # env.observation_space.shape[0]
+        self.current_model = DuelingDQN(num_inputs, 3,NN_size).to(device)
+        self.target_model  = DuelingDQN(num_inputs, 3,NN_size).to(device) # env.observation_space.shape[0]
         self.optimizer     = optim.Adam(self.current_model.parameters())
         self.batch_size    = batch_size
 
-    def train(self):
-        self.current_model.train()
-        self.target_model.train()
+    def train(self,device= torch.device('cpu')):
+        self.current_model.train().to(device)
+        self.target_model.train().to(device)
 
-    def eval(self):
-        self.current_model.eval()
-        self.target_model.eval()
+    def eval(self,device = torch.device('cpu')):
+        self.current_model.eval().to(device)
+        self.target_model.eval().to(device)
 
 
-    def compute_td_loss(self):
+    def compute_td_loss(self, device = torch.device('cpu')):
        state, action, reward, next_state, done = self.buffer_replay.sample(self.batch_size)
 
-       state      = (torch.FloatTensor(np.float32(state)))
-       next_state = (torch.FloatTensor(np.float32(next_state)))
-       action     = (torch.LongTensor(action))
-       reward     = (torch.FloatTensor(reward))
-       done       = (torch.FloatTensor(done))
+       state      = (torch.FloatTensor(np.float32(state))).to(device)
+       next_state = (torch.FloatTensor(np.float32(next_state))).to(device)
+       action     = (torch.LongTensor(action)).to(device)
+       reward     = (torch.FloatTensor(reward)).to(device)
+       done       = (torch.FloatTensor(done)).to(device)
 
-       q_values      = self.current_model(state)
-       next_q_values = self.target_model(next_state)
+       q_values      = self.current_model(state).to(device)
+       next_q_values = self.target_model(next_state).to(device)
 
-       q_value          = q_values.gather(1, action.unsqueeze(1)).squeeze(1)
+       q_value          = q_values.gather(1, action.unsqueeze(1)).squeeze(1).to(device)
        next_q_value     = next_q_values.max(1)[0]
        expected_q_value = reward + gamma * next_q_value * (1 - done)
+       expected_q_value.to(device)
     
        loss = (q_value - expected_q_value.detach()).pow(2).mean()
+       loss.to(device)
         
        self.optimizer.zero_grad()
        loss.backward()
@@ -126,8 +128,8 @@ class DDQN_Agent:
     
        return loss
 
-    def act(self,state, epsilon):
-        return self.current_model.act(state, epsilon)
+    def act(self,state, epsilon,device = torch.device('cpu')):
+        return self.current_model.act(state, epsilon,device)
 
     def get_act(self,state):
         return self.current_model.get_act(state)
@@ -162,21 +164,21 @@ def evaluate(env, policy):
 
 if __name__ == "__main__":
 
-    USE_CUDA = torch.cuda.is_available()
-
-    print(USE_CUDA)
 
     HIDDEN_DIM = [32,64,128]
     agent_type = 'DDQN'
-    agent_tech = 'MA'
+    agent_tech = 'MA_GPU'
     n_maq = 3
     MAX_EPISODES = 50
     N_TRIALS = 25
     REWARD_THRESHOLD =93.0
     REWARD_THRESHOLD_EVAL = 80.0
     PRINT_EVERY = 10
-    TEST_EVERY = 5
     gamma = 0.9
+    TEST_EVERY = 5
+
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    print('Rodando em '+str(device))
 
     for dim in HIDDEN_DIM:
 
@@ -204,11 +206,7 @@ if __name__ == "__main__":
         agentes = []
         batch_size = 32
         for i_ag in range(n_agentes):
-            agentes.append(DDQN_Agent(train_env.observation_space.shape[0], 3,dim,batch_size))
-
-    #if USE_CUDA:
-    #    current_model = current_model.cuda()
-    #    target_model  = target_model.cuda()
+            agentes.append(DDQN_Agent(train_env.observation_space.shape[0], 3,dim,batch_size,device))
 
         train_rewards = []
         test_rewards = []
@@ -231,14 +229,14 @@ if __name__ == "__main__":
             done = False
 
             for i_ag in range(n_agentes):
-                agentes[i_ag].train()
+                agentes[i_ag].train(device)
 
             while not done:
 
                 epsilon = epsilon_by_frame(cont_eps/10.0)
                 arr_ac = []
                 for i_ag in range(n_agentes):
-                    action = agentes[i_ag].act(state, epsilon)
+                    action = agentes[i_ag].act(state, epsilon,device)
                     arr_ac.append(action)
 
                 next_state, reward,rc_loc, done, perc_prod_train = train_env.step(arr_ac)
@@ -253,7 +251,7 @@ if __name__ == "__main__":
 
                 if len(agentes[0].buffer_replay) > batch_size:
                     for i_ag in range(n_agentes):
-                        loss = agentes[i_ag].compute_td_loss()
+                        loss = agentes[i_ag].compute_td_loss(device)
                         train_env.Plot_Var('info/value_loss_'+str(i_ag),loss.item())    
                 if (cont_eps) % 100 == 0:
                     for i_ag in range(n_agentes):
@@ -267,7 +265,7 @@ if __name__ == "__main__":
             train_env.Plot_Var('info/Reward mean',mean_train_rewards)
             train_env.Plot_Var('info/EPs',episode)
 
-            if episode % TEST_EVERY == 0:#perc_prod_train > REWARD_THRESHOLD_EVAL:
+            if episode % TEST_EVERY ==0:#perc_prod_train > REWARD_THRESHOLD_EVAL:
                 test_env =  Planta(cfg_file ='line_'+str(n_maq)+'M.cfg',log_dir=run_name+'_E_'+str(episode),mode = 1)
                 test_reward, perc_prod_test= evaluate(test_env, agentes)
                 test_rewards.append(test_reward)
