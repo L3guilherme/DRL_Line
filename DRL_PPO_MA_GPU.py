@@ -254,10 +254,10 @@ if __name__ == "__main__":
     HIDDEN_DIM = [32,64,128]
     agent_type = 'PPO'
     agent_tech = 'MA_GPU'
-    n_maq = 3
+    n_maq = 2
     MAX_EPISODES = 50
     N_TRIALS = 25
-    REWARD_THRESHOLD = 93.0
+    REWARD_THRESHOLD = 95.0
     REWARD_THRESHOLD_EVAL = 80.0
     PRINT_EVERY = 10
     DISCOUNT_FACTOR = 0.99

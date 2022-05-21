@@ -226,16 +226,16 @@ if __name__ == "__main__":
 
     run_train = True
 
-    HIDDEN_DIM = [32]
+    HIDDEN_DIM = [32,64,128]
     agent_type = 'A2C'
-    agent_tech = 'MA_GPU_3M'
-    n_maq = 3
-    MAX_EPISODES = 50
+    agent_tech = 'MA_GPU_2M'
+    n_maq = 2
+    MAX_EPISODES = 100
     N_TRIALS = 25
     PRINT_EVERY = 10
     TEST_EVERY = 5
 
-    REWARD_THRESHOLD = 93.0
+    REWARD_THRESHOLD = 95.0
     REWARD_THRESHOLD_EVAL = 80.0
 
     SEED = 1234
@@ -316,7 +316,7 @@ if __name__ == "__main__":
             if mean_test_perc_prod >= REWARD_THRESHOLD:
                 print(f'| Episode FIM: {episode:3} | Mean Train Rewards: {mean_train_rewards:5.1f} | Mean Test Rewards: {mean_test_rewards:5.1f} | Prod: {mean_test_perc_prod:5.1f}')
                 print(f'Reached reward threshold in {episode} episodes')
-                break
+                #break
 
         for i_ag in range(n_agentes):
             torch.save(policy[i_ag].state_dict(), run_name+'_'+str(i_ag)+'.pt')

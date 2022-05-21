@@ -162,17 +162,13 @@ def evaluate(env, policy):
 
 if __name__ == "__main__":
 
-    USE_CUDA = torch.cuda.is_available()
-
-    print(USE_CUDA)
-
     HIDDEN_DIM = [32,64,128]
     agent_type = 'DDQN'
     agent_tech = 'MA'
     n_maq = 3
     MAX_EPISODES = 50
     N_TRIALS = 25
-    REWARD_THRESHOLD =93.0
+    REWARD_THRESHOLD =95.0
     REWARD_THRESHOLD_EVAL = 80.0
     PRINT_EVERY = 10
     TEST_EVERY = 5
