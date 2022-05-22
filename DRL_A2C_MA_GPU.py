@@ -316,13 +316,13 @@ if __name__ == "__main__":
             if mean_test_perc_prod >= REWARD_THRESHOLD:
                 print(f'| Episode FIM: {episode:3} | Mean Train Rewards: {mean_train_rewards:5.1f} | Mean Test Rewards: {mean_test_rewards:5.1f} | Prod: {mean_test_perc_prod:5.1f}')
                 print(f'Reached reward threshold in {episode} episodes')
-                #break
+                break
 
         for i_ag in range(n_agentes):
             torch.save(policy[i_ag].state_dict(), run_name+'_'+str(i_ag)+'.pt')
 
                   #ALG       TIP        maq   TAM MRW                INT                 EPS     PTR             TRW               PTE                 DTI          DTF
-        resRun = [agent_type,agent_tech,n_maq,dim,mean_train_rewards,train_env.itc_total,episode,mean_train_prod,mean_test_rewards,mean_test_perc_prod,current_time,datetime.datetime.now(),MAX_EPISODES]
+        resRun = [agent_type,agent_tech,n_maq,dim,mean_train_rewards,train_env.itc_total,episode,mean_train_prod,mean_test_rewards,mean_test_perc_prod,current_time,datetime.datetime.now(),run_name,MAX_EPISODES]
 
         
         fileRes = "Tab_Res.csv"

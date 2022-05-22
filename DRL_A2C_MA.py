@@ -220,7 +220,7 @@ if __name__ == "__main__":
     agent_type = 'A2C'
     agent_tech = 'MA_loop_3M'
     n_maq = 3
-    MAX_EPISODES = 50
+    MAX_EPISODES = 100
     N_TRIALS = 25
     PRINT_EVERY = 10
     TEST_EVERY = 5
@@ -305,7 +305,7 @@ if __name__ == "__main__":
 
 
                   #ALG       TIP        maq   TAM MRW                INT                 EPS     PTR             TRW               PTE                 DTI          DTF
-        resRun = [agent_type,agent_tech,n_maq,dim,mean_train_rewards,train_env.itc_total,episode,mean_train_prod,mean_test_rewards,mean_test_perc_prod,current_time,datetime.datetime.now(),MAX_EPISODES]
+        resRun = [agent_type,agent_tech,n_maq,dim,mean_train_rewards,train_env.itc_total,episode,mean_train_prod,mean_test_rewards,mean_test_perc_prod,current_time,datetime.datetime.now(),run_name,MAX_EPISODES]
 
         
         fileRes = "Tab_Res.csv"

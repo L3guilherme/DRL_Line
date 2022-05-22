@@ -166,7 +166,7 @@ if __name__ == "__main__":
     agent_type = 'DDQN'
     agent_tech = 'MA'
     n_maq = 3
-    MAX_EPISODES = 50
+    MAX_EPISODES = 100
     N_TRIALS = 25
     REWARD_THRESHOLD =95.0
     REWARD_THRESHOLD_EVAL = 80.0
@@ -282,7 +282,7 @@ if __name__ == "__main__":
                     torch.save(agentes[i_ag].current_model.state_dict(), run_name+'_'+str(i_ag)+'.pt')
                 break
                   #ALG       TIP        maq   TAM MRW                INT                 EPS     PTR             TRW               PTE                 DTI          DTF
-        resRun = [agent_type,agent_tech,n_maq,dim,mean_train_rewards,train_env.itc_total,episode,mean_train_prod,mean_test_rewards,mean_test_perc_prod,current_time,datetime.datetime.now(),MAX_EPISODES]
+        resRun = [agent_type,agent_tech,n_maq,dim,mean_train_rewards,train_env.itc_total,episode,mean_train_prod,mean_test_rewards,mean_test_perc_prod,current_time,datetime.datetime.now(),run_name,MAX_EPISODES]
 
             
         fileRes = "Tab_Res.csv"

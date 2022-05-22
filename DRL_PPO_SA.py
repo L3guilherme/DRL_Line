@@ -205,7 +205,7 @@ if __name__ == "__main__":
     agent_type = 'PPO'
     agent_tech = 'SA'
     n_maq = 3
-    MAX_EPISODES = 50
+    MAX_EPISODES = 100
     DISCOUNT_FACTOR = 0.99
     N_TRIALS = 25
     REWARD_THRESHOLD = 93.0
@@ -282,7 +282,7 @@ if __name__ == "__main__":
                 
                 break
 
-        resRun = [agent_type,agent_tech,n_maq,dim,mean_train_rewards,train_env.itc_total,episode,mean_train_prod,mean_test_rewards,mean_test_perc_prod,current_time,datetime.datetime.now(),MAX_EPISODES]
+        resRun = [agent_type,agent_tech,n_maq,dim,mean_train_rewards,train_env.itc_total,episode,mean_train_prod,mean_test_rewards,mean_test_perc_prod,current_time,datetime.datetime.now(),run_name,MAX_EPISODES]
 
             
         fileRes = "Tab_Res.csv"
