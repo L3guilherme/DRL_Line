@@ -139,7 +139,7 @@ if __name__ == "__main__":
     HIDDEN_DIM = [32,64,128]
     agent_type = 'DDQN'
     agent_tech = 'SA'
-    n_maq = 3
+    n_maq = 2
     MAX_EPISODES = 100
     N_TRIALS = 25
     REWARD_THRESHOLD = 93.0
