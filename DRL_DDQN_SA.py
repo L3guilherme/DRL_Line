@@ -142,7 +142,7 @@ if __name__ == "__main__":
     n_maq = 2
     MAX_EPISODES = 100
     N_TRIALS = 25
-    REWARD_THRESHOLD = 93.0
+    REWARD_THRESHOLD = 95.0
     REWARD_THRESHOLD_EVAL = 80.0
     PRINT_EVERY = 10
     TEST_EVERY = 5

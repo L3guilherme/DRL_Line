@@ -226,11 +226,11 @@ if __name__ == "__main__":
 
     run_train = True
 
-    HIDDEN_DIM = [32,64,128]
+    HIDDEN_DIM = [32]
     agent_type = 'A2C'
-    agent_tech = 'MA_GPU_2M'
+    agent_tech = 'MA_1p5BP'
     n_maq = 2
-    MAX_EPISODES = 100
+    MAX_EPISODES = 50
     N_TRIALS = 25
     PRINT_EVERY = 10
     TEST_EVERY = 5
@@ -298,7 +298,7 @@ if __name__ == "__main__":
             train_env.Plot_Var('info/Reward mean',mean_train_rewards)
             train_env.Plot_Var('info/EPs',episode)
 
-            if episode % TEST_EVERY == 0:#perc_prod_train > REWARD_THRESHOLD_EVAL: # a cada mil testar, arquivos distintos, sem th rw min
+            if episode % TEST_EVERY == 0 or episode == 1:#perc_prod_train > REWARD_THRESHOLD_EVAL: # a cada mil testar, arquivos distintos, sem th rw min
                     test_env =  Planta(cfg_file ='line_'+str(n_maq)+'M.cfg',log_dir=run_name+'_E_'+str(episode),mode = 1)
                     test_reward,perc_prod_test = evaluate(test_env,policy)
                     test_rewards.append(test_reward)
@@ -321,9 +321,8 @@ if __name__ == "__main__":
         for i_ag in range(n_agentes):
             torch.save(policy[i_ag].state_dict(), run_name+'_'+str(i_ag)+'.pt')
 
-                  #ALG       TIP        maq   TAM MRW                INT                 EPS     PTR             TRW               PTE                 DTI          DTF
-        resRun = [agent_type,agent_tech,n_maq,dim,mean_train_rewards,train_env.itc_total,episode,mean_train_prod,mean_test_rewards,mean_test_perc_prod,current_time,datetime.datetime.now(),run_name,MAX_EPISODES]
-
+                  #ALG       TIP        maq   TAM RWTR               PTR             RWTE              PTE                 INT                 DTI          DTF
+        resRun = [agent_type,agent_tech,n_maq,dim,mean_train_rewards,mean_train_prod,mean_test_rewards,mean_test_perc_prod,train_env.itc_total,str(current_time)[:-7],str(datetime.datetime.now())[:-7],run_name,episode,MAX_EPISODES]
         
         fileRes = "Tab_Res.csv"
         with open(fileRes, 'a') as csvfile:

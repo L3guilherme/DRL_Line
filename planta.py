@@ -81,7 +81,7 @@ class Planta:
         self.acoes = list(itertools.product([0,1,2], repeat = self.n_maquinas))
         self.action_space = spaces.Discrete(len(self.acoes))# N maquinas 3 ações cada
         self.delta_ma_vel = 100.0
-        self.observation_space = spaces.Box(-np.inf, np.inf, shape=(7*self.n_maquinas+self.n_Buffers,), dtype=np.float32)#N maquinas 6 valoes 1 buffer 1 valor
+        self.observation_space = spaces.Box(-np.inf, np.inf, shape=(7*self.n_maquinas+self.n_Buffers,), dtype=np.float32)#N maquinas 7 valoes 1 buffer 1 valor
         self.toral_rc = 0.0
         self.itc = 0
         self.itc_total = 0
@@ -286,7 +286,7 @@ class Planta:
                 sp = maquina[item].get('sp',0)
                 ot = maquina[item].get('ot',0)
 
-                rc += wp+sp+ot-wt-bp
+                rc += wp+sp+ot-wt-1.5*bp
 
                 if(item[0] == 'M'):
                     self.Print_Maq_Res(item,maquina[item])
