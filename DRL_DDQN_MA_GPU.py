@@ -167,9 +167,9 @@ if __name__ == "__main__":
 
     HIDDEN_DIM = [32,64,128]
     agent_type = 'DDQN'
-    agent_tech = 'MA_GPU'
+    agent_tech = 'MA_1p5BP_newS'
     n_maq = 2
-    MAX_EPISODES = 100
+    MAX_EPISODES = 50
     N_TRIALS = 25
     REWARD_THRESHOLD = 95.0
     REWARD_THRESHOLD_EVAL = 80.0
@@ -284,7 +284,7 @@ if __name__ == "__main__":
                     torch.save(agentes[i_ag].current_model.state_dict(), run_name+'_'+str(i_ag)+'.pt')
                 break
                   #ALG       TIP        maq   TAM MRW                INT                 EPS     PTR             TRW               PTE                 DTI          DTF
-        resRun = [agent_type,agent_tech,n_maq,dim,mean_train_rewards,train_env.itc_total,episode,mean_train_prod,mean_test_rewards,mean_test_perc_prod,current_time,datetime.datetime.now(),run_name,MAX_EPISODES]
+        resRun = [agent_type,agent_tech,n_maq,dim,mean_train_rewards,mean_train_prod,mean_test_rewards,mean_test_perc_prod,current_time,train_env.itc_total,datetime.datetime.now(),run_name,episode,MAX_EPISODES]
 
             
         fileRes = "Tab_Res.csv"

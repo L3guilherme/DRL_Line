@@ -1274,6 +1274,32 @@ class Machine(CoreObject):
     def Get_Status(self,totalSimTime = -1):
         if(self.totalWaitingTime < 0.0):
             self.totalWaitingTime = 0.0
+
+        if self.isProcessing :
+            status = { self.name:{
+                   "st": int(self.isProcessing),
+                   "wp": self.totalWorkingTime/totalSimTime,
+                   "fp": self.totalFailureTime/totalSimTime,
+                   "bp": int(self.isBlocked),
+                   "wt": int(self.waitToDispose),
+                   "sp": self.minProssTime/self.totalOperationTimeInCurrentEntity,
+                   "ot": self.completedJobs/(totalSimTime/self.meanProssTime)}}
+        else:
+            status = { self.name:{
+                   "st": int(self.isProcessing),
+                   "wp": self.totalWorkingTime/totalSimTime,
+                   "fp": self.totalFailureTime/totalSimTime,
+                   "bp": int(self.isBlocked),
+                   "wt": int(self.waitToDispose),
+                   "sp": 0.0,
+                   "ot": 0.0}}
+        
+        return status
+
+
+    def Get_Status_hist(self,totalSimTime = -1):
+        if(self.totalWaitingTime < 0.0):
+            self.totalWaitingTime = 0.0
         status = { self.name:{
                    "st": int(self.isProcessing),
                    "wp": self.totalWorkingTime/totalSimTime,

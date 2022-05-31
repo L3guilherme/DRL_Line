@@ -415,6 +415,7 @@ class Planta:
         self.estado_at = self.Get_res(self.IncSimTime)
         st_geral,st_mq = self.Get_num_estado()
         #np.array(self.Get_num_estado(),dtype=np.float32)
+
         if self.mode == 1:
             return st_geral,st_mq
         return st_geral

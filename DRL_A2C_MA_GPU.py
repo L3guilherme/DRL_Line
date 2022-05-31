@@ -226,9 +226,9 @@ if __name__ == "__main__":
 
     run_train = True
 
-    HIDDEN_DIM = [32]
+    HIDDEN_DIM = [32,64,128]
     agent_type = 'A2C'
-    agent_tech = 'MA_1p5BP'
+    agent_tech = 'MA_1p5BP_newSt'
     n_maq = 2
     MAX_EPISODES = 50
     N_TRIALS = 25
