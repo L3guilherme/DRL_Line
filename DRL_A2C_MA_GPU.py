@@ -324,7 +324,8 @@ if __name__ == "__main__":
             torch.save(policy[i_ag].state_dict(), run_name+'_'+str(i_ag)+'.pt')
 
                   #ALG       TIP        maq   TAM RWTR               PTR             RWTE              PTE                 INT                 DTI          DTF
-        resRun = [agent_type,agent_tech,n_maq,dim,mean_train_rewards,mean_train_prod,mean_test_rewards,mean_test_perc_prod,train_env.itc_total,str(current_time)[:-7],str(datetime.datetime.now())[:-7],run_name,episode,MAX_EPISODES]
+        resRun = [agent_type,agent_tech,n_maq,dim,mean_train_rewards,mean_train_prod,mean_test_rewards,mean_test_perc_prod,train_env.itc_total,\
+                  str(current_time)[:-7],str(datetime.datetime.now())[:-7],run_name,episode,MAX_EPISODES]
         
         fileRes = "Tab_Res.csv"
         with open(fileRes, 'a') as csvfile:

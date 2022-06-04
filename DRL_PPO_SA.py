@@ -203,9 +203,9 @@ if __name__ == "__main__":
 
     HIDDEN_DIM = [32,64,128]
     agent_type = 'PPO'
-    agent_tech = 'SA'
+    agent_tech = 'SA_NewSt'
     n_maq = 2
-    MAX_EPISODES = 100
+    MAX_EPISODES = 50
     DISCOUNT_FACTOR = 0.99
     N_TRIALS = 25
     REWARD_THRESHOLD = 95.0
@@ -278,12 +278,12 @@ if __name__ == "__main__":
                 
                 print(f'| Episode FIM: {episode:3} | Mean Train Rewards: {mean_train_rewards:5.1f} | Mean Test Rewards: {mean_test_rewards:5.1f} | Prod: {mean_test_perc_prod:5.1f}')
                 print(f'Reached reward threshold in {episode} episodes')
-                torch.save(policy.state_dict(), run_name+'.pt')
-                
-                break
+                torch.save(policy.state_dict(), run_name+'_95.pt')
+                #break
 
-        resRun = [agent_type,agent_tech,n_maq,dim,mean_train_rewards,train_env.itc_total,episode,mean_train_prod,mean_test_rewards,mean_test_perc_prod,current_time,datetime.datetime.now(),run_name,MAX_EPISODES]
-
+        torch.save(policy.state_dict(), run_name+'.pt')
+        resRun = [agent_type,agent_tech,n_maq,dim,mean_train_rewards,mean_train_prod,mean_test_rewards,mean_test_perc_prod,train_env.itc_total,\
+                  str(current_time)[:-7],str(datetime.datetime.now())[:-7],run_name,episode,MAX_EPISODES]
             
         fileRes = "Tab_Res.csv"
         with open(fileRes, 'a') as csvfile:

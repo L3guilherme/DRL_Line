@@ -286,7 +286,7 @@ class Planta:
                 sp = maquina[item].get('sp',0)
                 ot = maquina[item].get('ot',0)
 
-                rc += wp+sp+ot-wt-1.5*bp
+                rc += wp+sp+ot-wt-bp
 
                 if(item[0] == 'M'):
                     self.Print_Maq_Res(item,maquina[item])

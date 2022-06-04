@@ -166,7 +166,7 @@ if __name__ == "__main__":
     agent_type = 'DDQN'
     agent_tech = 'MA'
     n_maq = 2
-    MAX_EPISODES = 100
+    MAX_EPISODES = 50
     N_TRIALS = 25
     REWARD_THRESHOLD =95.0
     REWARD_THRESHOLD_EVAL = 80.0
