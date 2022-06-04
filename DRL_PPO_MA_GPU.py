@@ -330,8 +330,11 @@ if __name__ == "__main__":
                 print(f'| Episode FIM: {episode:3} | Mean Train Rewards: {mean_train_rewards:5.1f} | Mean Test Rewards: {mean_test_rewards:5.1f} | Prod: {mean_test_perc_prod:5.1f}')
                 print(f'Reached reward threshold in {episode} episodes')
                 for i_ag in range(n_agentes):
-                    torch.save(policy[i_ag].state_dict(), run_name+'_'+str(i_ag)+'.pt')
-                break
+                    torch.save(policy[i_ag].state_dict(), run_name+'_95'+str(i_ag)+'.pt')
+                #break
+
+        for i_ag in range(n_agentes):
+            torch.save(policy[i_ag].state_dict(), run_name+'_'+str(i_ag)+'.pt')
 
         resRun = [agent_type,agent_tech,n_maq,dim,mean_train_rewards,mean_train_prod,mean_test_rewards,mean_test_perc_prod,current_time,train_env.itc_total,datetime.datetime.now(),run_name,episode,MAX_EPISODES]
 
