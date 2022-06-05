@@ -167,7 +167,7 @@ if __name__ == "__main__":
 
     HIDDEN_DIM = [32,64,128]
     agent_type = 'DDQN'
-    agent_tech = 'MA_1p5BP_newS'
+    agent_tech = 'MA_newS'
     n_maq = 2
     MAX_EPISODES = 50
     N_TRIALS = 25
